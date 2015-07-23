@@ -7,9 +7,9 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hdsx.taxi.upa.upaserver.socket.bean.MsgQueue;
-import com.hdsx.taxi.upa.upaserver.socket.bean.ReciPackBean;
-import com.hdsx.taxi.upa.upaserver.util.TcpPropertiesUtil;
+import com.cui.netty_server.socket.bean.MsgQueue;
+import com.cui.netty_server.socket.bean.ReciPackBean;
+import com.cui.netty_server.util.TcpPropertiesUtil;
 
 /**
  * 线程池（处理消息）管理

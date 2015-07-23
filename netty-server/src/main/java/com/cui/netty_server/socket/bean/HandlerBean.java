@@ -2,7 +2,7 @@ package com.cui.netty_server.socket.bean;
 
 import io.netty.channel.ChannelHandlerContext;
 
-import com.hdsx.taxi.upa.nettyutil.msg.IMsg;
+import com.cui.netty_server.nettyutil.msg.IMsg;
 
 /**
  * handler消息封装bean

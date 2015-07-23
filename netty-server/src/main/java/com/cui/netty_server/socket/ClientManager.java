@@ -13,8 +13,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cui.netty_server.msg.AbsMsg;
+import com.cui.netty_server.msg.MsgHeader;
 import com.cui.netty_server.socket.bean.Client;
 import com.cui.netty_server.socket.bean.MsgQueue;
+import com.cui.netty_server.socket.bean.TcpUser;
 import com.cui.netty_server.util.TcpPropertiesUtil;
 
 /**
@@ -53,27 +56,27 @@ public class ClientManager {
 		client.setLogin(false);
 		String clientId = getClientId(ctx);
 		logger.info("添加临时客户端：" + clientId);
-		ChannelHandlerContext channel=null;
-		for(String key:tempClientMap.keySet()){
-			if(getIP_Port(clientId)[0].equals(getIP_Port(key)[0])){
+		ChannelHandlerContext channel = null;
+		for (String key : tempClientMap.keySet()) {
+			if (getIP_Port(clientId)[0].equals(getIP_Port(key)[0])) {
 				logger.info("新channel接入移除旧临时客户端：");
-				channel=tempClientMap.get(key).getChannel();
+				channel = tempClientMap.get(key).getChannel();
 				removeTemClient(channel);
-				if (channel!=null&&channel.channel().isOpen()) {
+				if (channel != null && channel.channel().isOpen()) {
 					channel.close();
 				}
-				channel=null;
+				channel = null;
 			}
 		}
-		for(String key:clientMap.keySet()){
-			if(getIP_Port(clientId)[0].equals(getIP_Port(key)[0])){
+		for (String key : clientMap.keySet()) {
+			if (getIP_Port(clientId)[0].equals(getIP_Port(key)[0])) {
 				logger.info("新channel接入移除客户端：");
-				channel=clientMap.get(key).getChannel();
+				channel = clientMap.get(key).getChannel();
 				removeClient(clientMap.get(key).getChannel());
-				if (channel!=null&&channel.channel().isOpen()) {
+				if (channel != null && channel.channel().isOpen()) {
 					channel.close();
 				}
-				channel=null;
+				channel = null;
 			}
 		}
 		tempClientMap.put(clientId, client);
@@ -112,7 +115,7 @@ public class ClientManager {
 			client = tempClientMap.get(clientId);
 			if (client != null) {
 				removeTemClient(channel);
-			} else {				
+			} else {
 				logger.error("channel在临时客户端及客户端库中都不存在");
 				return;
 			}
@@ -130,7 +133,7 @@ public class ClientManager {
 		client.setXzqhdm(user.getXzqhdm());
 		logger.info("------------添加客户端：" + clientId + "-------------------");
 		clientMap.put(clientId, client);
-		String[] ip_port =getIP_Port(clientId);
+		String[] ip_port = getIP_Port(clientId);
 		saveLog(client.getXzqhdm(), (byte) 1, ip_port[0],
 				Integer.parseInt(ip_port[1]));
 	}
@@ -145,7 +148,7 @@ public class ClientManager {
 		Client client = clientMap.remove(clientId);
 		if (client != null) {
 			logger.info("------------移除客户端：" + clientId + "-------------------");
-			String[] ip_port =getIP_Port(clientId);
+			String[] ip_port = getIP_Port(clientId);
 			saveLog(client.getXzqhdm(), (byte) 0, ip_port[0],
 					Integer.parseInt(ip_port[1]));
 		}
@@ -174,7 +177,7 @@ public class ClientManager {
 							+ getClientId(channel));
 					channel.close();
 				}
-				channel=null;
+				channel = null;
 			}
 		}
 	}
@@ -203,7 +206,7 @@ public class ClientManager {
 							+ getClientId(channel));
 					channel.close();
 				}
-				channel=null;
+				channel = null;
 			}
 		}
 	}
@@ -257,13 +260,7 @@ public class ClientManager {
 	 * @param type
 	 */
 	public static void saveLog(String xzqhdm, byte type, String ip, int port) {
-		TcpClientLog tcpClientLog = new TcpClientLog();
-		tcpClientLog.setConnectype(type);
-		tcpClientLog.setXzqhdm(xzqhdm);
-		tcpClientLog.setTime(new Date());
-		tcpClientLog.setIp(ip);
-		tcpClientLog.setPort(port);
-		MsgQueue.getTcpLogqueue().add(tcpClientLog);
+		// 保存用户连接日志
 	}
 
 	/**
@@ -304,25 +301,27 @@ public class ClientManager {
 			InetSocketAddress address = (InetSocketAddress) ctx.channel()
 					.remoteAddress();
 			InetAddress inetAdd = address.getAddress();
-			return inetAdd.getHostAddress() + ":"
-					+ address.getPort()+","+ctx.name();
+			return inetAdd.getHostAddress() + ":" + address.getPort() + ","
+					+ ctx.name();
 		} catch (Exception e) {
 			logger.error("取客户端id异常：", e);
 			return null;
 		}
 
 	}
+
 	/**
 	 * 获取ip和端口号：0：ip，1：端口
+	 * 
 	 * @param clientId
 	 * @return
 	 */
-	public static String[] getIP_Port(String clientId){
-		String [] ip_port=null;
-		if(clientId!=null&&!"".equals(clientId)){
-			String [] clientString=clientId.split(",");
-			if(clientString!=null&&clientString.length==2){
-				ip_port=clientString[0].split(":");
+	public static String[] getIP_Port(String clientId) {
+		String[] ip_port = null;
+		if (clientId != null && !"".equals(clientId)) {
+			String[] clientString = clientId.split(",");
+			if (clientString != null && clientString.length == 2) {
+				ip_port = clientString[0].split(":");
 			}
 		}
 		return ip_port;

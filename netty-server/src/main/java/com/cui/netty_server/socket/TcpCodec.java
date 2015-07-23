@@ -1,4 +1,4 @@
-package com.hdsx.taxi.upa.upaserver.socket;
+package com.cui.netty_server.socket;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -10,10 +10,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hdsx.taxi.upa.upamsg.AbsMsg;
-import com.hdsx.taxi.upa.upamsg.MsgFactory;
-import com.hdsx.taxi.upa.upamsg.util.Converter;
-import com.hdsx.taxi.upa.upamsg.util.HexStringUtil;
+import com.cui.netty_server.msg.AbsMsg;
+import com.cui.netty_server.util.HexStringUtil;
 
 /**
  * 编解码

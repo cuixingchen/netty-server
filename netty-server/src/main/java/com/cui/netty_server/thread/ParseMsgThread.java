@@ -9,12 +9,19 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.core.pattern.Converter;
-
+import com.cui.netty_server.msg.AbsMsg;
+import com.cui.netty_server.msg.MessageID;
+import com.cui.netty_server.msg.MsgFactory;
+import com.cui.netty_server.msg.MsgHeader;
+import com.cui.netty_server.msg.UP_CONNECT_RSP;
 import com.cui.netty_server.nettyutil.handler.IHandler;
 import com.cui.netty_server.socket.ClientManager;
 import com.cui.netty_server.socket.bean.Client;
 import com.cui.netty_server.socket.bean.ReciPackBean;
+import com.cui.netty_server.socket.bean.TcpUser;
+import com.cui.netty_server.socket.handler.HandlerFactory;
+import com.cui.netty_server.util.CRC16_CUI;
+import com.cui.netty_server.util.Converter;
 
 /**
  * 处理消息线程
@@ -50,10 +57,8 @@ public class ParseMsgThread extends Thread {
 			if (msgid == MessageID.UP_CONNECT_REQ) {
 				// 判断是否加密
 				if (head.getEncrypt_flag() == 1) {
-					HashMap<String, Object> map = new HashMap<String, Object>();
-					map.put("msg_gnsscenterid", head.getMsg_gnsscenterid());
-					List<TcpUser> list = TcpUserServiceImpl.getInstance()
-							.getByProperty(map);
+					//缓存用户信息
+					List<TcpUser> list = null;
 					if (list != null && list.size() == 1) {
 						TcpUser user = list.get(0);
 						head.setIA1(user.getIA1());
@@ -77,13 +82,13 @@ public class ParseMsgThread extends Thread {
 					logger.info("客户端没有登陆，请先登录后再发送消息");
 					ClientManager.removeTemClient(rpb.getChannel());
 					ChannelHandlerContext channel = null;
-					channel=rpb.getChannel();
+					channel = rpb.getChannel();
 					if (channel.channel().isOpen()) {
 						logger.info("客户端没有登陆，发送业务数据，主动断开连接，连接name："
 								+ ClientManager.getClientId(channel));
 						channel.close();
 					}
-					channel=null;
+					channel = null;
 					return;
 				}
 				ClientManager.setClientLastTime(rpb.getChannel(), client);
@@ -147,7 +152,7 @@ public class ParseMsgThread extends Thread {
 	 * @return
 	 */
 	private byte[] decode(byte[] b) {
-		ByteBuffer buffer = ByteBuffer.allocate(10*1024*1024);
+		ByteBuffer buffer = ByteBuffer.allocate(10 * 1024 * 1024);
 		ByteBuffer buffer1 = ByteBuffer.wrap(b);
 		buffer.position(0);
 		while (buffer1.remaining() > 0) {
