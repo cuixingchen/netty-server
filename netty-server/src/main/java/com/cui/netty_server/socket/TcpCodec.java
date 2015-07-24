@@ -55,8 +55,6 @@ public class TcpCodec extends ByteToMessageCodec<AbsMsg> {
 
 			logger.error("解码异常:"+e.toString());
 
-		}finally{
-			ReferenceCountUtil.release(buffer);
 		}
 
 	}
