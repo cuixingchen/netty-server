@@ -16,6 +16,7 @@ public abstract class AbsMsg implements IMsg {
 	public static byte[] VERSION_FLAG = new byte[] { 0x01, 0x02, 0x0F };// 协议版本标识
 	public byte ENCRYPT_FLAG = 0;// 消息加密标识，0：不加密，1：加密
 
+
 	ByteBuffer buffer = ByteBuffer.allocate(4096);
 
 	protected MsgHeader head;
