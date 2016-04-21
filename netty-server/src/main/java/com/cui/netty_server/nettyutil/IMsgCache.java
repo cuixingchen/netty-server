@@ -1,4 +1,7 @@
 package com.cui.netty_server.nettyutil;
+/**
+ *
+ */
 
 import com.cui.netty_server.nettyutil.msg.IMsg;
 
