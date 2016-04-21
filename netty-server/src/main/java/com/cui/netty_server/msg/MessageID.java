@@ -5,7 +5,7 @@ package com.cui.netty_server.msg;
  * Reason:	 TODO ADD REASON. 
  * Date:     2014年10月15日 下午4:58:32 
  * @author   cuipengfei
- * 删除123
+ * 删除
  */
 public class MessageID {
 	/** 链路登录请求消息*/
