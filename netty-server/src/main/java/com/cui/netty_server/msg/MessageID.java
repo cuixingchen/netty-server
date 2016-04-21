@@ -13,5 +13,7 @@ public class MessageID {
 	public static final int UP_CONNECT_RSP = 0x2002;
 	private int i;
 
+	private long j;
+
 }
 
