@@ -4,7 +4,7 @@ package com.cui.netty_server.msg;
  * Function: TODO ADD FUNCTION. 
  * Reason:	 TODO ADD REASON. 
  * Date:     2014年10月15日 下午4:58:32 
- * @author   sid
+ * @author   cuipengfei
  * @see 	 
  */
 public class MessageID {
