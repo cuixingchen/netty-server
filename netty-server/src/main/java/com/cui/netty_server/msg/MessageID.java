@@ -12,5 +12,9 @@ public class MessageID {
 	/** 链路登录应答消息*/
 	public static final int UP_CONNECT_RSP = 0x2002;
 
+
+
+
+
 }
 
